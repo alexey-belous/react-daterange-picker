@@ -387,10 +387,6 @@ var DateRangePicker = _react2.default.createClass({
   completeSelection: function completeSelection() {
     var highlightedDate = this.state.highlightedDate;
     if (highlightedDate) {
-      this.setState({
-        hideSelection: false,
-        highlightedDate: null
-      });
       this.props.onSelect(highlightedDate, this.statesForDate(highlightedDate));
     }
   },

@@ -335,10 +335,6 @@ const DateRangePicker = React.createClass({
   completeSelection() {
     let highlightedDate = this.state.highlightedDate;
     if (highlightedDate) {
-      this.setState({
-        hideSelection: false,
-        highlightedDate: null,
-      });
       this.props.onSelect(highlightedDate, this.statesForDate(highlightedDate));
     }
   },
