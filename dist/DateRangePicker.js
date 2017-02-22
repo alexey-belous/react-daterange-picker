@@ -563,7 +563,8 @@ var DateRangePicker = _react2.default.createClass({
       onUnHighlightDate: this.onUnHighlightDate,
       dateRangesForDate: this.dateRangesForDate,
       dateComponent: _CalendarDate2.default,
-      locale: this.props.locale
+      locale: this.props.locale,
+      disableNavigation: this.props.disableNavigation
     };
 
     return _react2.default.createElement(_CalendarMonth2.default, props);

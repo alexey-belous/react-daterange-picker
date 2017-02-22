@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import {} from 'moment-range';
+import { } from 'moment-range';
 import Immutable from 'immutable';
 import calendar from 'calendar';
 
@@ -22,7 +22,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 const absoluteMinimum = moment(new Date(-8640000000000000 / 2)).startOf('day');
 const absoluteMaximum = moment(new Date(8640000000000000 / 2)).startOf('day');
 
-function noop() {}
+function noop() { }
 
 const DateRangePicker = React.createClass({
   mixins: [BemMixin, PureRenderMixin],
@@ -162,7 +162,7 @@ const DateRangePicker = React.createClass({
 
     let defs = Immutable.fromJS(stateDefinitions);
 
-    dateStates.forEach(function(s) {
+    dateStates.forEach(function (s) {
       let r = s.range;
       let start = r.start.startOf('day');
       let end = r.end.startOf('day');
@@ -189,7 +189,7 @@ const DateRangePicker = React.createClass({
     });
 
     // sanitize date states
-    return Immutable.List(actualStates).map(function(s) {
+    return Immutable.List(actualStates).map(function (s) {
       let def = defs.get(s.state);
       return Immutable.Map({
         range: s.range,
@@ -425,11 +425,11 @@ const DateRangePicker = React.createClass({
   changeYear(year) {
     let {enabledRange, month} = this.state;
 
-    if (moment({years: year, months: month, date: 1}).unix() < enabledRange.start.unix()) {
+    if (moment({ years: year, months: month, date: 1 }).unix() < enabledRange.start.unix()) {
       month = enabledRange.start.month();
     }
 
-    if (moment({years: year, months: month + 1, date: 1}).unix() > enabledRange.end.unix()) {
+    if (moment({ years: year, months: month + 1, date: 1 }).unix() > enabledRange.end.unix()) {
       month = enabledRange.end.month();
     }
 
@@ -465,7 +465,7 @@ const DateRangePicker = React.createClass({
     let monthDate = this.getMonthDate();
     let year = monthDate.year();
     let month = monthDate.month();
-    let key = `${ index}-${ year }-${ month }`;
+    let key = `${index}-${year}-${month}`;
     let props;
 
     monthDate.add(index, 'months');
@@ -517,23 +517,24 @@ const DateRangePicker = React.createClass({
       dateRangesForDate: this.dateRangesForDate,
       dateComponent: CalendarDate,
       locale: this.props.locale,
+      disableNavigation: this.props.disableNavigation,
     };
 
     return <CalendarMonth {...props} />;
   },
 
-  render: function() {
+  render: function () {
     let {paginationArrowComponent: PaginationArrowComponent, className, numberOfCalendars, stateDefinitions, selectedLabel, showLegend, helpMessage} = this.props;
 
     let calendars = Immutable.Range(0, numberOfCalendars).map(this.renderCalendar);
-    className = this.cx({element: null}) + ' ' + className;
+    className = this.cx({ element: null }) + ' ' + className;
 
     return (
       <div className={className.trim()}>
         <PaginationArrowComponent direction="previous" onTrigger={this.moveBack} disabled={!this.canMoveBack()} />
         {calendars.toJS()}
         <PaginationArrowComponent direction="next" onTrigger={this.moveForward} disabled={!this.canMoveForward()} />
-        {helpMessage ? <span className={this.cx({element: 'HelpMessage'})}>{helpMessage}</span> : null}
+        {helpMessage ? <span className={this.cx({ element: 'HelpMessage' })}>{helpMessage}</span> : null}
         {showLegend ? <Legend stateDefinitions={stateDefinitions} selectedLabel={selectedLabel} /> : null}
       </div>
     );
