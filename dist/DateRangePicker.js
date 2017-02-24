@@ -100,7 +100,8 @@ var DateRangePicker = _react2.default.createClass({
     singleDateRange: _react2.default.PropTypes.bool,
     showLegend: _react2.default.PropTypes.bool,
     stateDefinitions: _react2.default.PropTypes.object,
-    value: _CustomPropTypes2.default.momentOrMomentRange
+    value: _CustomPropTypes2.default.momentOrMomentRange,
+    renderYearInCalendarHeader: _react2.default.PropTypes.bool
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -133,7 +134,8 @@ var DateRangePicker = _react2.default.createClass({
       dateStates: [],
       showLegend: false,
       onSelect: noop,
-      paginationArrowComponent: _PaginationArrow2.default
+      paginationArrowComponent: _PaginationArrow2.default,
+      renderYearInCalendarHeader: true
     };
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
@@ -560,7 +562,8 @@ var DateRangePicker = _react2.default.createClass({
       dateRangesForDate: this.dateRangesForDate,
       dateComponent: _CalendarDate2.default,
       locale: this.props.locale,
-      disableNavigation: this.props.disableNavigation
+      disableNavigation: this.props.disableNavigation,
+      renderYearInCalendarHeader: this.props.renderYearInCalendarHeader
     };
 
     return _react2.default.createElement(_CalendarMonth2.default, props);

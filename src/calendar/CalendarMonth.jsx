@@ -25,6 +25,7 @@ const CalendarMonth = React.createClass({
     onYearChange: React.PropTypes.func,
     value: CustomPropTypes.momentOrMomentRange,
     locale: React.PropTypes.string,
+    renderYearInCalendarHeader: React.PropTypes.bool,
   },
 
   setLocale(locale) {
@@ -176,7 +177,7 @@ const CalendarMonth = React.createClass({
   renderHeader() {
     return (
       <div className={this.cx({element: 'MonthHeader'})}>
-        {this.renderHeaderMonth()} {this.renderHeaderYear()}
+        {this.renderHeaderMonth()} {this.props.renderYearInCalendarHeader && this.renderHeaderYear()}
       </div>
     );
   },

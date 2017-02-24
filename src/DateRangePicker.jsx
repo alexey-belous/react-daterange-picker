@@ -56,6 +56,7 @@ const DateRangePicker = React.createClass({
     showLegend: React.PropTypes.bool,
     stateDefinitions: React.PropTypes.object,
     value: CustomPropTypes.momentOrMomentRange,
+    renderYearInCalendarHeader: React.PropTypes.bool,
   },
 
   getDefaultProps() {
@@ -89,6 +90,7 @@ const DateRangePicker = React.createClass({
       showLegend: false,
       onSelect: noop,
       paginationArrowComponent: PaginationArrow,
+      renderYearInCalendarHeader: true,
     };
   },
 
@@ -514,6 +516,7 @@ const DateRangePicker = React.createClass({
       dateComponent: CalendarDate,
       locale: this.props.locale,
       disableNavigation: this.props.disableNavigation,
+      renderYearInCalendarHeader: this.props.renderYearInCalendarHeader,
     };
 
     return <CalendarMonth {...props} />;
