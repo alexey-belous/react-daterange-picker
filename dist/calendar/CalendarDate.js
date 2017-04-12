@@ -194,6 +194,7 @@ var CalendarDate = _react2.default.createClass({
     var color = void 0;
     var amColor = void 0;
     var pmColor = void 0;
+    var className = '';
     var states = dateRangesForDate(date);
     var numStates = states.count();
     var cellStyle = {};
@@ -219,6 +220,7 @@ var CalendarDate = _react2.default.createClass({
     if (numStates === 1) {
       // If there's only one state, it means we're not at a boundary
       color = states.getIn([0, 'color']);
+      className = states.getIn([0, 'className']);
 
       if (color) {
 
@@ -233,6 +235,7 @@ var CalendarDate = _react2.default.createClass({
     } else {
       amColor = states.getIn([0, 'color']);
       pmColor = states.getIn([1, 'color']);
+      className = states.getIn([1, 'className']);
 
       if (amColor) {
         cellStyle.borderLeftColor = (0, _lightenDarkenColor2.default)(amColor, -10);
@@ -241,6 +244,12 @@ var CalendarDate = _react2.default.createClass({
       if (pmColor) {
         cellStyle.borderRightColor = (0, _lightenDarkenColor2.default)(pmColor, -10);
       }
+    }
+
+    var c = this.cx({ element: "HalfDateStates" });
+
+    if (className) {
+      c += ' ' + className;
     }
 
     return _react2.default.createElement(
@@ -253,7 +262,7 @@ var CalendarDate = _react2.default.createClass({
         onMouseDown: this.mouseDown },
       numStates > 1 && _react2.default.createElement(
         'div',
-        { className: this.cx({ element: "HalfDateStates" }) },
+        { className: c },
         _react2.default.createElement(_CalendarDatePeriod2.default, { period: 'am', color: amColor }),
         _react2.default.createElement(_CalendarDatePeriod2.default, { period: 'pm', color: pmColor })
       ),

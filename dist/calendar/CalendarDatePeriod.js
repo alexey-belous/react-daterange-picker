@@ -27,13 +27,15 @@ var CalendarDatePeriod = _react2.default.createClass({
 
   propTypes: {
     color: _react2.default.PropTypes.string,
-    period: _react2.default.PropTypes.string
+    period: _react2.default.PropTypes.string,
+    className: _react2.default.PropTypes.string
   },
 
   render: function render() {
     var _props = this.props,
         color = _props.color,
-        period = _props.period;
+        period = _props.period,
+        className = _props.className;
 
     var modifiers = _defineProperty({}, period, true);
     var style = void 0;
@@ -42,7 +44,12 @@ var CalendarDatePeriod = _react2.default.createClass({
       style = { backgroundColor: color };
     }
 
-    return _react2.default.createElement('div', { style: style, className: this.cx({ modifiers: modifiers }) });
+    var c = this.cx({ modifiers: modifiers });
+    if (className) {
+      c += ' ' + className;
+    }
+
+    return _react2.default.createElement('div', { style: style, className: c });
   }
 });
 

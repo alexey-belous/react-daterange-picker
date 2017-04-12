@@ -10,19 +10,25 @@ const CalendarDatePeriod = React.createClass({
   propTypes: {
     color: React.PropTypes.string,
     period: React.PropTypes.string,
+    className: React.PropTypes.string,
   },
 
   render() {
-    let {color, period} = this.props;
-    let modifiers = {[period]: true};
+    let { color, period, className } = this.props;
+    let modifiers = { [period]: true };
     let style;
 
     if (color) {
-      style = {backgroundColor: color};
+      style = { backgroundColor: color };
+    }
+
+    let c = this.cx({ modifiers });
+    if (className) {
+      c += ' ' + className;
     }
 
     return (
-      <div style={style} className={this.cx({modifiers})} />
+      <div style={style} className={c} />
     );
   },
 });
