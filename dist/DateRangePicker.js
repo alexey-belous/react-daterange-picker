@@ -203,13 +203,9 @@ var DateRangePicker = _react2.default.createClass({
   },
   getDateStates: function getDateStates(props) {
     var dateStates = props.dateStates,
-        defaultState = props.defaultState,
         stateDefinitions = props.stateDefinitions;
 
     var actualStates = [];
-    var minDate = absoluteMinimum;
-    var maxDate = absoluteMaximum;
-    var dateCursor = (0, _moment2.default)(minDate).startOf('day');
 
     var defs = _immutable2.default.fromJS(stateDefinitions);
 
@@ -218,19 +214,7 @@ var DateRangePicker = _react2.default.createClass({
       var start = r.start.startOf('day');
       var end = r.end.startOf('day');
 
-      if (!dateCursor.isSame(start, 'day')) {
-        actualStates.push({
-          state: defaultState,
-          range: _moment2.default.range(dateCursor, start)
-        });
-      }
-      actualStates.push(s);
-      dateCursor = end;
-    });
-
-    actualStates.push({
-      state: defaultState,
-      range: _moment2.default.range(dateCursor, maxDate)
+      actualStates.push(Object.assign({}, s, { range: _moment2.default.range(start, end) }));
     });
 
     // sanitize date states
@@ -259,9 +243,28 @@ var DateRangePicker = _react2.default.createClass({
     });
   },
   dateRangesForDate: function dateRangesForDate(date) {
-    return this.state.dateStates.filter(function (d) {
+    var res = this.state.dateStates.filter(function (d) {
       return d.get('range').contains(date);
     });
+    if (res.count() === 0) {
+      var _props2 = this.props,
+          defaultState = _props2.defaultState,
+          stateDefinitions = _props2.stateDefinitions;
+
+      var s = stateDefinitions[defaultState];
+      var defs = _immutable2.default.fromJS(stateDefinitions);
+      var def = defs.get(defaultState);
+
+      var tmp = _immutable2.default.fromJS([_immutable2.default.Map({
+        range: s.range,
+        state: s.state,
+        selectable: def.get('selectable', true),
+        color: def.get('color'),
+        className: def.get('className')
+      })]);
+      return tmp;
+    }
+    return res;
   },
   sanitizeRange: function sanitizeRange(range, forwards) {
     /* Truncates the provided range at the first intersection
@@ -494,13 +497,13 @@ var DateRangePicker = _react2.default.createClass({
     });
   },
   renderCalendar: function renderCalendar(index) {
-    var _props2 = this.props,
-        bemBlock = _props2.bemBlock,
-        bemNamespace = _props2.bemNamespace,
-        firstOfWeek = _props2.firstOfWeek,
-        numberOfCalendars = _props2.numberOfCalendars,
-        selectionType = _props2.selectionType,
-        value = _props2.value;
+    var _props3 = this.props,
+        bemBlock = _props3.bemBlock,
+        bemNamespace = _props3.bemNamespace,
+        firstOfWeek = _props3.firstOfWeek,
+        numberOfCalendars = _props3.numberOfCalendars,
+        selectionType = _props3.selectionType,
+        value = _props3.value;
     var _state2 = this.state,
         dateStates = _state2.dateStates,
         enabledRange = _state2.enabledRange,
@@ -572,14 +575,14 @@ var DateRangePicker = _react2.default.createClass({
 
 
   render: function render() {
-    var _props3 = this.props,
-        PaginationArrowComponent = _props3.paginationArrowComponent,
-        className = _props3.className,
-        numberOfCalendars = _props3.numberOfCalendars,
-        stateDefinitions = _props3.stateDefinitions,
-        selectedLabel = _props3.selectedLabel,
-        showLegend = _props3.showLegend,
-        helpMessage = _props3.helpMessage;
+    var _props4 = this.props,
+        PaginationArrowComponent = _props4.paginationArrowComponent,
+        className = _props4.className,
+        numberOfCalendars = _props4.numberOfCalendars,
+        stateDefinitions = _props4.stateDefinitions,
+        selectedLabel = _props4.selectedLabel,
+        showLegend = _props4.showLegend,
+        helpMessage = _props4.helpMessage;
 
 
     var calendars = _immutable2.default.Range(0, numberOfCalendars).map(this.renderCalendar);

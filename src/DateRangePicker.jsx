@@ -121,7 +121,7 @@ const DateRangePicker = React.createClass({
 
   getInitialState() {
     let now = new Date();
-    let {initialYear, initialMonth, initialFromValue, value} = this.props;
+    let { initialYear, initialMonth, initialFromValue, value } = this.props;
     let year = now.getFullYear();
     let month = now.getMonth();
 
@@ -156,11 +156,8 @@ const DateRangePicker = React.createClass({
   },
 
   getDateStates(props) {
-    let {dateStates, defaultState, stateDefinitions} = props;
+    let { dateStates, stateDefinitions } = props;
     let actualStates = [];
-    let minDate = absoluteMinimum;
-    let maxDate = absoluteMaximum;
-    let dateCursor = moment(minDate).startOf('day');
 
     let defs = Immutable.fromJS(stateDefinitions);
 
@@ -169,25 +166,7 @@ const DateRangePicker = React.createClass({
       let start = r.start.startOf('day');
       let end = r.end.startOf('day');
 
-      if (!dateCursor.isSame(start, 'day')) {
-        actualStates.push({
-          state: defaultState,
-          range: moment.range(
-            dateCursor,
-            start
-          ),
-        });
-      }
-      actualStates.push(s);
-      dateCursor = end;
-    });
-
-    actualStates.push({
-      state: defaultState,
-      range: moment.range(
-        dateCursor,
-        maxDate
-      ),
+      actualStates.push(Object.assign({}, s, { range: moment.range(start, end) }));
     });
 
     // sanitize date states
@@ -216,7 +195,23 @@ const DateRangePicker = React.createClass({
   },
 
   dateRangesForDate(date) {
-    return this.state.dateStates.filter(d => d.get('range').contains(date));
+    const res = this.state.dateStates.filter(d => d.get('range').contains(date));
+    if (res.count() === 0) {
+      let { defaultState, stateDefinitions } = this.props;
+      const s = stateDefinitions[defaultState];
+      let defs = Immutable.fromJS(stateDefinitions);
+      let def = defs.get(defaultState);
+
+      const tmp = Immutable.fromJS([Immutable.Map({
+        range: s.range,
+        state: s.state,
+        selectable: def.get('selectable', true),
+        color: def.get('color'),
+        className: def.get('className'),
+      })]);
+      return tmp;
+    }
+    return res;
   },
 
   sanitizeRange(range, forwards) {
@@ -269,8 +264,8 @@ const DateRangePicker = React.createClass({
   },
 
   onSelectDate(date) {
-    let {selectionType} = this.props;
-    let {selectedStartDate} = this.state;
+    let { selectionType } = this.props;
+    let { selectedStartDate } = this.state;
 
     if (selectionType === 'range') {
       if (selectedStartDate) {
@@ -290,8 +285,8 @@ const DateRangePicker = React.createClass({
   },
 
   onHighlightDate(date) {
-    let {selectionType} = this.props;
-    let {selectedStartDate} = this.state;
+    let { selectionType } = this.props;
+    let { selectedStartDate } = this.state;
 
     let datePair;
     let range;
@@ -422,7 +417,7 @@ const DateRangePicker = React.createClass({
   },
 
   changeYear(year) {
-    let {enabledRange, month} = this.state;
+    let { enabledRange, month } = this.state;
 
     if (moment({ years: year, months: month, date: 1 }).unix() < enabledRange.start.unix()) {
       month = enabledRange.start.month();
@@ -524,7 +519,7 @@ const DateRangePicker = React.createClass({
   },
 
   render: function () {
-    let {paginationArrowComponent: PaginationArrowComponent, className, numberOfCalendars, stateDefinitions, selectedLabel, showLegend, helpMessage} = this.props;
+    let { paginationArrowComponent: PaginationArrowComponent, className, numberOfCalendars, stateDefinitions, selectedLabel, showLegend, helpMessage } = this.props;
 
     let calendars = Immutable.Range(0, numberOfCalendars).map(this.renderCalendar);
     className = this.cx({ element: null }) + ' ' + className;
