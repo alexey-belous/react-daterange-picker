@@ -227,6 +227,11 @@ const CalendarDate = React.createClass({
       c += ' ' + className;
     }
 
+    let c1 = this.cx({ element: "FullDateStates" });
+    if (className) {
+      c1 += ' ' + className;
+    }
+
     return (
       <td className={this.cx({ element: 'Date', modifiers: bemModifiers, states: bemStates })}
         style={cellStyle}
@@ -240,7 +245,7 @@ const CalendarDate = React.createClass({
             <CalendarDatePeriod period="pm" color={pmColor} />
           </div>}
         {numStates === 1 &&
-          <div className={this.cx({ element: "FullDateStates" })} style={style} />}
+          <div className={c1} style={style} />}
         <span className={this.cx({ element: "DateLabel" })}>{date.format('D')}</span>
         {selectionModifier ? <CalendarSelection modifier={selectionModifier} pending={pending} /> : null}
         {highlightModifier ? <CalendarHighlight modifier={highlightModifier} /> : null}

@@ -252,6 +252,11 @@ var CalendarDate = _react2.default.createClass({
       c += ' ' + className;
     }
 
+    var c1 = this.cx({ element: "FullDateStates" });
+    if (className) {
+      c1 += ' ' + className;
+    }
+
     return _react2.default.createElement(
       'td',
       { className: this.cx({ element: 'Date', modifiers: bemModifiers, states: bemStates }),
@@ -266,7 +271,7 @@ var CalendarDate = _react2.default.createClass({
         _react2.default.createElement(_CalendarDatePeriod2.default, { period: 'am', color: amColor }),
         _react2.default.createElement(_CalendarDatePeriod2.default, { period: 'pm', color: pmColor })
       ),
-      numStates === 1 && _react2.default.createElement('div', { className: this.cx({ element: "FullDateStates" }), style: style }),
+      numStates === 1 && _react2.default.createElement('div', { className: c1, style: style }),
       _react2.default.createElement(
         'span',
         { className: this.cx({ element: "DateLabel" }) },
