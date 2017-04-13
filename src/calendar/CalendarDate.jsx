@@ -103,8 +103,8 @@ const CalendarDate = React.createClass({
     document.addEventListener('touchend', this.touchEnd);
   },
 
-  mouseEnter() {
-    this.props.onHighlightDate(this.props.date);
+  mouseEnter(e) {
+    this.props.onHighlightDate(this.props.date, e);
   },
 
   mouseLeave() {

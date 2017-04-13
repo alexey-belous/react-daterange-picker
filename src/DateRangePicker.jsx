@@ -46,6 +46,7 @@ const DateRangePicker = React.createClass({
     minimumDate: React.PropTypes.instanceOf(Date),
     numberOfCalendars: React.PropTypes.number,
     onHighlightDate: React.PropTypes.func, // triggered when a date is highlighted (hovered)
+    onUnHighlightDate: React.PropTypes.func,
     onHighlightRange: React.PropTypes.func, // triggered when a range is highlighted (hovered)
     onSelect: React.PropTypes.func, // triggered when a date or range is selectec
     onSelectStart: React.PropTypes.func, // triggered when the first date in a range is selected
@@ -261,6 +262,9 @@ const DateRangePicker = React.createClass({
     this.setState({
       highlightedDate: null,
     });
+    if (this.props.onUnHighlightDate) {
+      this.props.onUnHighlightDate();
+    }
   },
 
   onSelectDate(date) {
@@ -284,7 +288,7 @@ const DateRangePicker = React.createClass({
     }
   },
 
-  onHighlightDate(date) {
+  onHighlightDate(date, e) {
     let { selectionType } = this.props;
     let { selectedStartDate } = this.state;
 
@@ -300,11 +304,11 @@ const DateRangePicker = React.createClass({
         range = this.sanitizeRange(range, forwards);
         this.highlightRange(range);
       } else if (!this.isDateDisabled(date) && this.isDateSelectable(date)) {
-        this.highlightDate(date);
+        this.highlightDate(date, e);
       }
     } else {
       if (!this.isDateDisabled(date) && this.isDateSelectable(date)) {
-        this.highlightDate(date);
+        this.highlightDate(date, e);
       }
     }
   },
@@ -351,12 +355,12 @@ const DateRangePicker = React.createClass({
     }
   },
 
-  highlightDate(date) {
+  highlightDate(date, e) {
     this.setState({
       highlightedDate: date,
     });
     if (typeof this.props.onHighlightDate === 'function') {
-      this.props.onHighlightDate(date, this.statesForDate(date));
+      this.props.onHighlightDate(date, this.statesForDate(date), e);
     }
   },
 

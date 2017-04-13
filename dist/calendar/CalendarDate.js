@@ -129,8 +129,8 @@ var CalendarDate = _react2.default.createClass({
     });
     document.addEventListener('touchend', this.touchEnd);
   },
-  mouseEnter: function mouseEnter() {
-    this.props.onHighlightDate(this.props.date);
+  mouseEnter: function mouseEnter(e) {
+    this.props.onHighlightDate(this.props.date, e);
   },
   mouseLeave: function mouseLeave() {
     if (this.state.mouseDown) {

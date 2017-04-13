@@ -91,6 +91,7 @@ var DateRangePicker = _react2.default.createClass({
     minimumDate: _react2.default.PropTypes.instanceOf(Date),
     numberOfCalendars: _react2.default.PropTypes.number,
     onHighlightDate: _react2.default.PropTypes.func, // triggered when a date is highlighted (hovered)
+    onUnHighlightDate: _react2.default.PropTypes.func,
     onHighlightRange: _react2.default.PropTypes.func, // triggered when a range is highlighted (hovered)
     onSelect: _react2.default.PropTypes.func, // triggered when a date or range is selectec
     onSelectStart: _react2.default.PropTypes.func, // triggered when the first date in a range is selected
@@ -316,6 +317,9 @@ var DateRangePicker = _react2.default.createClass({
     this.setState({
       highlightedDate: null
     });
+    if (this.props.onUnHighlightDate) {
+      this.props.onUnHighlightDate();
+    }
   },
   onSelectDate: function onSelectDate(date) {
     var selectionType = this.props.selectionType;
@@ -337,7 +341,7 @@ var DateRangePicker = _react2.default.createClass({
       }
     }
   },
-  onHighlightDate: function onHighlightDate(date) {
+  onHighlightDate: function onHighlightDate(date, e) {
     var selectionType = this.props.selectionType;
     var selectedStartDate = this.state.selectedStartDate;
 
@@ -356,11 +360,11 @@ var DateRangePicker = _react2.default.createClass({
         range = this.sanitizeRange(range, forwards);
         this.highlightRange(range);
       } else if (!this.isDateDisabled(date) && this.isDateSelectable(date)) {
-        this.highlightDate(date);
+        this.highlightDate(date, e);
       }
     } else {
       if (!this.isDateDisabled(date) && this.isDateSelectable(date)) {
-        this.highlightDate(date);
+        this.highlightDate(date, e);
       }
     }
   },
@@ -409,12 +413,12 @@ var DateRangePicker = _react2.default.createClass({
       this.props.onSelect(range, this.statesForRange(range));
     }
   },
-  highlightDate: function highlightDate(date) {
+  highlightDate: function highlightDate(date, e) {
     this.setState({
       highlightedDate: date
     });
     if (typeof this.props.onHighlightDate === 'function') {
-      this.props.onHighlightDate(date, this.statesForDate(date));
+      this.props.onHighlightDate(date, this.statesForDate(date), e);
     }
   },
   getMonthDate: function getMonthDate() {
