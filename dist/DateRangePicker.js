@@ -243,10 +243,10 @@ var DateRangePicker = _react2.default.createClass({
     });
   },
   dateRangesForDate: function dateRangesForDate(date) {
-    var res = this.state.dateStates.filter(function (d) {
+    var res = this.state.dateStates.find(function (d) {
       return d.get('range').contains(date);
     });
-    if (res.count() === 0) {
+    if (!res) {
       var _props2 = this.props,
           defaultState = _props2.defaultState,
           stateDefinitions = _props2.stateDefinitions;
@@ -264,7 +264,7 @@ var DateRangePicker = _react2.default.createClass({
       })]);
       return tmp;
     }
-    return res;
+    return _immutable2.default.fromJS([res]);
   },
   sanitizeRange: function sanitizeRange(range, forwards) {
     /* Truncates the provided range at the first intersection

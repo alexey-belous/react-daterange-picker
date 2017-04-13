@@ -195,8 +195,8 @@ const DateRangePicker = React.createClass({
   },
 
   dateRangesForDate(date) {
-    const res = this.state.dateStates.filter(d => d.get('range').contains(date));
-    if (res.count() === 0) {
+    const res = this.state.dateStates.find(d => d.get('range').contains(date));
+    if (!res) {
       let { defaultState, stateDefinitions } = this.props;
       const s = stateDefinitions[defaultState];
       let defs = Immutable.fromJS(stateDefinitions);
@@ -211,7 +211,7 @@ const DateRangePicker = React.createClass({
       })]);
       return tmp;
     }
-    return res;
+    return Immutable.fromJS([res]);
   },
 
   sanitizeRange(range, forwards) {
