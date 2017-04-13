@@ -47,7 +47,7 @@ const CalendarMonth = React.createClass({
   },
 
   renderDay(date, i) {
-    let {dateComponent: CalendarDate, value, highlightedDate, highlightedRange, hideSelection, enabledRange, ...props} = this.props;
+    let { dateComponent: CalendarDate, value, highlightedDate, highlightedRange, hideSelection, enabledRange, dateRangesForDate, ...props } = this.props;
     let d = moment(date).locale(this.props.locale);
 
     let isInSelectedRange;
@@ -64,6 +64,8 @@ const CalendarMonth = React.createClass({
       isSelectedRangeEnd = value.end.isSame(d, 'day');
     }
 
+    const states = dateRangesForDate(date);
+
     return (
       <CalendarDate
         key={i}
@@ -78,6 +80,7 @@ const CalendarMonth = React.createClass({
         isSelectedRangeEnd={isSelectedRangeEnd}
         isInSelectedRange={isInSelectedRange}
         date={d}
+        states={states}
         {...props} />
     );
   },
@@ -85,23 +88,23 @@ const CalendarMonth = React.createClass({
   renderWeek(dates, i) {
     let days = dates.map(this.renderDay);
     return (
-      <tr className={this.cx({element: 'Week'})} key={i}>{days.toJS()}</tr>
+      <tr className={this.cx({ element: 'Week' })} key={i}>{days}</tr>
     );
   },
 
   renderDayHeaders() {
-    let {firstOfWeek} = this.props;
+    let { firstOfWeek } = this.props;
     let indices = Immutable.Range(firstOfWeek, 7).concat(Immutable.Range(0, firstOfWeek));
 
-    let headers = indices.map(function(index) {
+    let headers = indices.map(function (index) {
       let weekday = this.WEEKDAYS.get(index);
       return (
-        <th className={this.cx({element: 'WeekdayHeading'})} key={weekday} scope="col"><abbr title={weekday[0]}>{weekday[1]}</abbr></th>
+        <th className={this.cx({ element: 'WeekdayHeading' })} key={weekday} scope="col"><abbr title={weekday[0]}>{weekday[1]}</abbr></th>
       );
     }.bind(this));
 
     return (
-      <tr className={this.cx({element: 'Weekdays'})}>{headers.toJS()}</tr>
+      <tr className={this.cx({ element: 'Weekdays' })}>{headers.toJS()}</tr>
     );
   },
 
@@ -110,7 +113,7 @@ const CalendarMonth = React.createClass({
   },
 
   renderYearChoice(year) {
-    let {enabledRange} = this.props;
+    let { enabledRange } = this.props;
 
     if (year < enabledRange.start.year()) {
       return null;
@@ -126,15 +129,15 @@ const CalendarMonth = React.createClass({
   },
 
   renderHeaderYear() {
-    let {firstOfMonth} = this.props;
+    let { firstOfMonth } = this.props;
     let y = firstOfMonth.year();
     let years = Immutable.Range(y - 5, y).concat(Immutable.Range(y, y + 10));
     let choices = years.map(this.renderYearChoice);
-    let modifiers = {year: true};
+    let modifiers = { year: true };
     return (
-      <span className={this.cx({element: 'MonthHeaderLabel', modifiers})}>
+      <span className={this.cx({ element: 'MonthHeaderLabel', modifiers })}>
         {firstOfMonth.locale(this.props.locale).format('YYYY')}
-        {this.props.disableNavigation ? null : <select className={this.cx({element: 'MonthHeaderSelect'})} value={y} onChange={this.handleYearChange}>{choices.toJS()}</select>}
+        {this.props.disableNavigation ? null : <select className={this.cx({ element: 'MonthHeaderSelect' })} value={y} onChange={this.handleYearChange}>{choices.toJS()}</select>}
       </span>
     );
   },
@@ -144,15 +147,15 @@ const CalendarMonth = React.createClass({
   },
 
   renderMonthChoice(month, i) {
-    let {firstOfMonth, enabledRange} = this.props;
+    let { firstOfMonth, enabledRange } = this.props;
     let disabled = false;
     let year = firstOfMonth.year();
 
-    if (moment({years: year, months: i + 1, date: 1}).unix() < enabledRange.start.unix()) {
+    if (moment({ years: year, months: i + 1, date: 1 }).unix() < enabledRange.start.unix()) {
       disabled = true;
     }
 
-    if (moment({years: year, months: i, date: 1}).unix() > enabledRange.end.unix()) {
+    if (moment({ years: year, months: i, date: 1 }).unix() > enabledRange.end.unix()) {
       disabled = true;
     }
 
@@ -162,42 +165,41 @@ const CalendarMonth = React.createClass({
   },
 
   renderHeaderMonth() {
-    let {firstOfMonth} = this.props;
+    let { firstOfMonth } = this.props;
     let choices = this.MONTHS.map(this.renderMonthChoice);
-    let modifiers = {month: true};
+    let modifiers = { month: true };
 
     return (
-      <span className={this.cx({element: 'MonthHeaderLabel', modifiers})}>
+      <span className={this.cx({ element: 'MonthHeaderLabel', modifiers })}>
         {firstOfMonth.locale(this.props.locale).format('MMMM')}
-        {this.props.disableNavigation ? null : <select className={this.cx({element: 'MonthHeaderSelect'})} value={firstOfMonth.month()} onChange={this.handleMonthChange}>{choices.toJS()}</select>}
+        {this.props.disableNavigation ? null : <select className={this.cx({ element: 'MonthHeaderSelect' })} value={firstOfMonth.month()} onChange={this.handleMonthChange}>{choices.toJS()}</select>}
       </span>
     );
   },
 
   renderHeader() {
     return (
-      <div className={this.cx({element: 'MonthHeader'})}>
+      <div className={this.cx({ element: 'MonthHeader' })}>
         {this.renderHeaderMonth()} {this.props.renderYearInCalendarHeader && this.renderHeaderYear()}
       </div>
     );
   },
-
   render() {
-    let {firstOfWeek, firstOfMonth} = this.props;
+    let { firstOfWeek, firstOfMonth } = this.props;
 
     let cal = new calendar.Calendar(firstOfWeek);
-    let monthDates = Immutable.fromJS(cal.monthDates(firstOfMonth.year(), firstOfMonth.month()));
+    let monthDates = cal.monthDates(firstOfMonth.year(), firstOfMonth.month());
     let weeks = monthDates.map(this.renderWeek);
 
     return (
-      <div className={this.cx({element: 'Month'})}>
+      <div className={this.cx({ element: 'Month' })}>
         {this.renderHeader()}
-        <table className={this.cx({element: 'MonthDates'})}>
+        <table className={this.cx({ element: 'MonthDates' })}>
           <thead>
             {this.renderDayHeaders()}
           </thead>
           <tbody>
-            {weeks.toJS()}
+            {weeks}
           </tbody>
         </table>
       </div>

@@ -204,7 +204,7 @@ const DateRangePicker = React.createClass({
 
       const tmp = Immutable.fromJS([Immutable.Map({
         range: s.range,
-        state: s.state,
+        state: defaultState,
         selectable: def.get('selectable', true),
         color: def.get('color'),
         className: def.get('className'),

@@ -13,7 +13,7 @@ import CalendarSelection from './CalendarSelection';
 
 
 const CalendarDate = React.createClass({
-  mixins: [BemMixin, PureRenderMixin],
+  mixins: [BemMixin],
 
   propTypes: {
     date: CustomPropTypes.moment,
@@ -39,6 +39,8 @@ const CalendarDate = React.createClass({
     onHighlightDate: React.PropTypes.func,
     onUnHighlightDate: React.PropTypes.func,
     onSelectDate: React.PropTypes.func,
+
+    states: React.PropTypes.object,
   },
 
   getInitialState() {
@@ -132,7 +134,6 @@ const CalendarDate = React.createClass({
 
     return { today, weekend, otherMonth };
   },
-
   getBemStates() {
     let {
       isSelectedDate,
@@ -147,6 +148,19 @@ const CalendarDate = React.createClass({
     return { disabled, highlighted, selected };
   },
 
+  shouldComponentUpdate(nextProps) {
+    const currentProps = this.props;
+
+    let oldStates = currentProps.states;
+    let states = nextProps.states;
+
+    if (states.getIn([0, 'state']) !== oldStates.getIn([0, 'state'])
+      || !currentProps.date.isSame(nextProps.date, 'day')) {
+      return true;
+    }
+    return false;
+  },
+
   render() {
     let {
       date,
@@ -159,6 +173,7 @@ const CalendarDate = React.createClass({
       isHighlightedRangeStart,
       isHighlightedRangeEnd,
       isInHighlightedRange,
+      states,
     } = this.props;
 
     let bemModifiers = this.getBemModifiers();
@@ -169,7 +184,6 @@ const CalendarDate = React.createClass({
     let amColor;
     let pmColor;
     let className = '';
-    let states = dateRangesForDate(date);
     let numStates = states.count();
     let cellStyle = {};
     let style = {};

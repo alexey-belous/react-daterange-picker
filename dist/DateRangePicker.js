@@ -257,7 +257,7 @@ var DateRangePicker = _react2.default.createClass({
 
       var tmp = _immutable2.default.fromJS([_immutable2.default.Map({
         range: s.range,
-        state: s.state,
+        state: defaultState,
         selectable: def.get('selectable', true),
         color: def.get('color'),
         className: def.get('className')

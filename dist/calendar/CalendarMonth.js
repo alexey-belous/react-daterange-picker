@@ -90,7 +90,8 @@ var CalendarMonth = _react2.default.createClass({
         highlightedRange = _props.highlightedRange,
         hideSelection = _props.hideSelection,
         enabledRange = _props.enabledRange,
-        props = _objectWithoutProperties(_props, ['dateComponent', 'value', 'highlightedDate', 'highlightedRange', 'hideSelection', 'enabledRange']);
+        dateRangesForDate = _props.dateRangesForDate,
+        props = _objectWithoutProperties(_props, ['dateComponent', 'value', 'highlightedDate', 'highlightedRange', 'hideSelection', 'enabledRange', 'dateRangesForDate']);
 
     var d = (0, _moment2.default)(date).locale(this.props.locale);
 
@@ -108,6 +109,8 @@ var CalendarMonth = _react2.default.createClass({
       isSelectedRangeEnd = value.end.isSame(d, 'day');
     }
 
+    var states = dateRangesForDate(date);
+
     return _react2.default.createElement(CalendarDate, _extends({
       key: i,
       isToday: d.isSame((0, _moment2.default)(), 'day'),
@@ -120,7 +123,8 @@ var CalendarMonth = _react2.default.createClass({
       isSelectedRangeStart: isSelectedRangeStart,
       isSelectedRangeEnd: isSelectedRangeEnd,
       isInSelectedRange: isInSelectedRange,
-      date: d
+      date: d,
+      states: states
     }, props));
   },
   renderWeek: function renderWeek(dates, i) {
@@ -128,7 +132,7 @@ var CalendarMonth = _react2.default.createClass({
     return _react2.default.createElement(
       'tr',
       { className: this.cx({ element: 'Week' }), key: i },
-      days.toJS()
+      days
     );
   },
   renderDayHeaders: function renderDayHeaders() {
@@ -252,7 +256,7 @@ var CalendarMonth = _react2.default.createClass({
 
 
     var cal = new _calendar2.default.Calendar(firstOfWeek);
-    var monthDates = _immutable2.default.fromJS(cal.monthDates(firstOfMonth.year(), firstOfMonth.month()));
+    var monthDates = cal.monthDates(firstOfMonth.year(), firstOfMonth.month());
     var weeks = monthDates.map(this.renderWeek);
 
     return _react2.default.createElement(
@@ -270,7 +274,7 @@ var CalendarMonth = _react2.default.createClass({
         _react2.default.createElement(
           'tbody',
           null,
-          weeks.toJS()
+          weeks
         )
       )
     );

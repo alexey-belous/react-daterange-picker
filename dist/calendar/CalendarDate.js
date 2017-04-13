@@ -45,7 +45,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var CalendarDate = _react2.default.createClass({
   displayName: 'CalendarDate',
 
-  mixins: [_BemMixin2.default, _PureRenderMixin2.default],
+  mixins: [_BemMixin2.default],
 
   propTypes: {
     date: _CustomPropTypes2.default.moment,
@@ -70,7 +70,9 @@ var CalendarDate = _react2.default.createClass({
     dateRangesForDate: _react2.default.PropTypes.func,
     onHighlightDate: _react2.default.PropTypes.func,
     onUnHighlightDate: _react2.default.PropTypes.func,
-    onSelectDate: _react2.default.PropTypes.func
+    onSelectDate: _react2.default.PropTypes.func,
+
+    states: _react2.default.PropTypes.object
   },
 
   getInitialState: function getInitialState() {
@@ -173,6 +175,17 @@ var CalendarDate = _react2.default.createClass({
 
     return { disabled: disabled, highlighted: highlighted, selected: selected };
   },
+  shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
+    var currentProps = this.props;
+
+    var oldStates = currentProps.states;
+    var states = nextProps.states;
+
+    if (states.getIn([0, 'state']) !== oldStates.getIn([0, 'state']) || !currentProps.date.isSame(nextProps.date, 'day')) {
+      return true;
+    }
+    return false;
+  },
   render: function render() {
     var _props3 = this.props,
         date = _props3.date,
@@ -184,7 +197,8 @@ var CalendarDate = _react2.default.createClass({
         isHighlightedDate = _props3.isHighlightedDate,
         isHighlightedRangeStart = _props3.isHighlightedRangeStart,
         isHighlightedRangeEnd = _props3.isHighlightedRangeEnd,
-        isInHighlightedRange = _props3.isInHighlightedRange;
+        isInHighlightedRange = _props3.isInHighlightedRange,
+        states = _props3.states;
 
 
     var bemModifiers = this.getBemModifiers();
@@ -195,7 +209,6 @@ var CalendarDate = _react2.default.createClass({
     var amColor = void 0;
     var pmColor = void 0;
     var className = '';
-    var states = dateRangesForDate(date);
     var numStates = states.count();
     var cellStyle = {};
     var style = {};
