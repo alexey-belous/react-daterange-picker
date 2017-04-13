@@ -181,7 +181,7 @@ var CalendarDate = _react2.default.createClass({
     var oldStates = currentProps.states;
     var states = nextProps.states;
 
-    if (states.getIn([0, 'state']) !== oldStates.getIn([0, 'state']) || !currentProps.date.isSame(nextProps.date, 'day')) {
+    if (states.getIn([0, 'state']) !== oldStates.getIn([0, 'state']) || !currentProps.date.isSame(nextProps.date, 'day') || currentProps.isHighlightedDate !== nextProps.isHighlightedDate) {
       return true;
     }
     return false;

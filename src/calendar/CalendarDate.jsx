@@ -155,7 +155,7 @@ const CalendarDate = React.createClass({
     let states = nextProps.states;
 
     if (states.getIn([0, 'state']) !== oldStates.getIn([0, 'state'])
-      || !currentProps.date.isSame(nextProps.date, 'day')) {
+      || !currentProps.date.isSame(nextProps.date, 'day') || currentProps.isHighlightedDate !== nextProps.isHighlightedDate) {
       return true;
     }
     return false;
