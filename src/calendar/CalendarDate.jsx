@@ -106,6 +106,9 @@ const CalendarDate = React.createClass({
   mouseEnter(e) {
     this.props.onHighlightDate(this.props.date, e);
   },
+  onMouseOver(e) {
+    this.props.onHighlightDate(this.props.date, e);
+  },
 
   mouseLeave() {
     if (this.state.mouseDown) {
@@ -251,7 +254,8 @@ const CalendarDate = React.createClass({
         onTouchStart={this.touchStart}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}
-        onMouseDown={this.mouseDown}>
+        onMouseDown={this.mouseDown}
+        onMouseOver={this.onMouseOver}>
         {numStates > 1 &&
           <div className={c}>
             <CalendarDatePeriod period="am" color={amColor} />

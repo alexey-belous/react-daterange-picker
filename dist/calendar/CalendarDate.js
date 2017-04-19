@@ -132,6 +132,9 @@ var CalendarDate = _react2.default.createClass({
   mouseEnter: function mouseEnter(e) {
     this.props.onHighlightDate(this.props.date, e);
   },
+  onMouseOver: function onMouseOver(e) {
+    this.props.onHighlightDate(this.props.date, e);
+  },
   mouseLeave: function mouseLeave() {
     if (this.state.mouseDown) {
       this.props.onSelectDate(this.props.date);
@@ -189,7 +192,6 @@ var CalendarDate = _react2.default.createClass({
   render: function render() {
     var _props3 = this.props,
         date = _props3.date,
-        dateRangesForDate = _props3.dateRangesForDate,
         isSelectedDate = _props3.isSelectedDate,
         isSelectedRangeStart = _props3.isSelectedRangeStart,
         isSelectedRangeEnd = _props3.isSelectedRangeEnd,
@@ -277,7 +279,8 @@ var CalendarDate = _react2.default.createClass({
         onTouchStart: this.touchStart,
         onMouseEnter: this.mouseEnter,
         onMouseLeave: this.mouseLeave,
-        onMouseDown: this.mouseDown },
+        onMouseDown: this.mouseDown,
+        onMouseOver: this.onMouseOver },
       numStates > 1 && _react2.default.createElement(
         'div',
         { className: c },
