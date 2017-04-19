@@ -72,7 +72,7 @@ var CalendarDate = _react2.default.createClass({
     onUnHighlightDate: _react2.default.PropTypes.func,
     onSelectDate: _react2.default.PropTypes.func,
 
-    states: _react2.default.PropTypes.object
+    states: _react2.default.PropTypes.array
   },
 
   getInitialState: function getInitialState() {

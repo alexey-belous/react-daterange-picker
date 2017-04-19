@@ -40,7 +40,7 @@ const CalendarDate = React.createClass({
     onUnHighlightDate: React.PropTypes.func,
     onSelectDate: React.PropTypes.func,
 
-    states: React.PropTypes.object,
+    states: React.PropTypes.array,
   },
 
   getInitialState() {
