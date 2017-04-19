@@ -63,7 +63,7 @@ var CalendarDate = _react2.default.createClass({
     isInHighlightedRange: _react2.default.PropTypes.bool,
 
     highlightedDate: _react2.default.PropTypes.object,
-    dateStates: _react2.default.PropTypes.instanceOf(_immutable2.default.List),
+    dateStates: _react2.default.PropTypes.array,
     isDisabled: _react2.default.PropTypes.bool,
     isToday: _react2.default.PropTypes.bool,
 
@@ -181,7 +181,7 @@ var CalendarDate = _react2.default.createClass({
     var oldStates = currentProps.states;
     var states = nextProps.states;
 
-    if (states.getIn([0, 'state']) !== oldStates.getIn([0, 'state']) || !currentProps.date.isSame(nextProps.date, 'day') || currentProps.isHighlightedDate !== nextProps.isHighlightedDate) {
+    if (states[0].state !== oldStates[0].state || !currentProps.date.isSame(nextProps.date, 'day') || currentProps.isHighlightedDate !== nextProps.isHighlightedDate) {
       return true;
     }
     return false;
@@ -209,7 +209,7 @@ var CalendarDate = _react2.default.createClass({
     var amColor = void 0;
     var pmColor = void 0;
     var className = '';
-    var numStates = states.count();
+    var numStates = states.length;
     var cellStyle = {};
     var style = {};
 
@@ -232,8 +232,8 @@ var CalendarDate = _react2.default.createClass({
 
     if (numStates === 1) {
       // If there's only one state, it means we're not at a boundary
-      color = states.getIn([0, 'color']);
-      className = states.getIn([0, 'className']);
+      color = states[0].color;
+      className = states[0].className;
 
       if (color) {
 
@@ -246,9 +246,9 @@ var CalendarDate = _react2.default.createClass({
         };
       }
     } else {
-      amColor = states.getIn([0, 'color']);
-      pmColor = states.getIn([1, 'color']);
-      className = states.getIn([1, 'className']);
+      amColor = states[0].color;
+      pmColor = states[1].color;
+      className = states[1].className;
 
       if (amColor) {
         cellStyle.borderLeftColor = (0, _lightenDarkenColor2.default)(amColor, -10);

@@ -24,6 +24,15 @@ const absoluteMaximum = moment(new Date(8640000000000000 / 2)).startOf('day');
 
 function noop() { }
 
+const contains = (range, d) => {
+  let oD = d.valueOf();
+
+  const startInRange = (range.start.valueOf() <= oD);
+  const endInRange = (range.end.valueOf() >= oD);
+
+  return (startInRange && endInRange);
+};
+
 const DateRangePicker = React.createClass({
   mixins: [BemMixin, PureRenderMixin],
 
@@ -160,27 +169,24 @@ const DateRangePicker = React.createClass({
     let { dateStates, stateDefinitions } = props;
     let actualStates = [];
 
-    let defs = Immutable.fromJS(stateDefinitions);
+    let defs = stateDefinitions;
 
     dateStates.forEach(function (s) {
       let r = s.range;
       let start = r.start.startOf('day');
       let end = r.end.startOf('day');
 
-      actualStates.push(Object.assign({}, s, { range: moment.range(start, end) }));
+      let def = defs[s.state];
+
+      actualStates.push(Object.assign({}, s, {
+        range: moment.range(start, end),
+        selectable: def.selectable ? def.selectable : true,
+        color: def.color,
+        className: def.className,
+      }));
     });
 
-    // sanitize date states
-    return Immutable.List(actualStates).map(function (s) {
-      let def = defs.get(s.state);
-      return Immutable.Map({
-        range: s.range,
-        state: s.state,
-        selectable: def.get('selectable', true),
-        color: def.get('color'),
-        className: def.get('className'),
-      });
-    });
+    return actualStates;
   },
 
   isDateDisabled(date) {
@@ -188,31 +194,40 @@ const DateRangePicker = React.createClass({
   },
 
   isDateSelectable(date) {
-    return this.dateRangesForDate(date).some(r => r.get('selectable'));
+    return this.dateRangesForDate(date).some(r => r.selectable);
   },
 
   nonSelectableStateRanges() {
-    return this.state.dateStates.filter(d => !d.get('selectable'));
+    return this.state.dateStates.filter(d => !d.selectable);
   },
 
   dateRangesForDate(date) {
-    const res = this.state.dateStates.find(d => d.get('range').contains(date));
+    const ss = this.state.dateStates;
+    // const res = this.state.dateStates.find(d => contains(d.get('range'), date));
+    let res = false;
+    for (let i = 0; i < ss.length; i++) {
+      const d = ss[i];
+      if (contains(d.range, date)) {
+        res = d;
+        break;
+      }
+    }
     if (!res) {
       let { defaultState, stateDefinitions } = this.props;
       const s = stateDefinitions[defaultState];
       let defs = Immutable.fromJS(stateDefinitions);
       let def = defs.get(defaultState);
 
-      const tmp = Immutable.fromJS([Immutable.Map({
+      const tmp = [{
         range: s.range,
         state: defaultState,
-        selectable: def.get('selectable', true),
-        color: def.get('color'),
-        className: def.get('className'),
-      })]);
+        selectable: def.selectable,
+        color: def.color,
+        className: def.className,
+      }];
       return tmp;
     }
-    return Immutable.fromJS([res]);
+    return [res];
   },
 
   sanitizeRange(range, forwards) {
@@ -324,14 +339,14 @@ const DateRangePicker = React.createClass({
   },
 
   statesForDate(date) {
-    return this.state.dateStates.filter(d => date.within(d.get('range'))).map(d => d.get('state'));
+    return this.state.dateStates.filter(d => date.within(d.range)).map(d => d.state);
   },
 
   statesForRange(range) {
     if (range.start.isSame(range.end, 'day')) {
       return this.statesForDate(range.start);
     }
-    return this.state.dateStates.filter(d => d.get('range').intersect(range)).map(d => d.get('state'));
+    return this.state.dateStates.filter(d => d.range.intersect(range)).map(d => d.state);
   },
 
   completeSelection() {

@@ -67,6 +67,15 @@ var absoluteMaximum = (0, _moment2.default)(new Date(8640000000000000 / 2)).star
 
 function noop() {}
 
+var contains = function contains(range, d) {
+  var oD = d.valueOf();
+
+  var startInRange = range.start.valueOf() <= oD;
+  var endInRange = range.end.valueOf() >= oD;
+
+  return startInRange && endInRange;
+};
+
 var DateRangePicker = _react2.default.createClass({
   displayName: 'DateRangePicker',
 
@@ -208,45 +217,49 @@ var DateRangePicker = _react2.default.createClass({
 
     var actualStates = [];
 
-    var defs = _immutable2.default.fromJS(stateDefinitions);
+    var defs = stateDefinitions;
 
     dateStates.forEach(function (s) {
       var r = s.range;
       var start = r.start.startOf('day');
       var end = r.end.startOf('day');
 
-      actualStates.push(Object.assign({}, s, { range: _moment2.default.range(start, end) }));
+      var def = defs[s.state];
+
+      actualStates.push(Object.assign({}, s, {
+        range: _moment2.default.range(start, end),
+        selectable: def.selectable ? def.selectable : true,
+        color: def.color,
+        className: def.className
+      }));
     });
 
-    // sanitize date states
-    return _immutable2.default.List(actualStates).map(function (s) {
-      var def = defs.get(s.state);
-      return _immutable2.default.Map({
-        range: s.range,
-        state: s.state,
-        selectable: def.get('selectable', true),
-        color: def.get('color'),
-        className: def.get('className')
-      });
-    });
+    return actualStates;
   },
   isDateDisabled: function isDateDisabled(date) {
     return !this.state.enabledRange.contains(date);
   },
   isDateSelectable: function isDateSelectable(date) {
     return this.dateRangesForDate(date).some(function (r) {
-      return r.get('selectable');
+      return r.selectable;
     });
   },
   nonSelectableStateRanges: function nonSelectableStateRanges() {
     return this.state.dateStates.filter(function (d) {
-      return !d.get('selectable');
+      return !d.selectable;
     });
   },
   dateRangesForDate: function dateRangesForDate(date) {
-    var res = this.state.dateStates.find(function (d) {
-      return d.get('range').contains(date);
-    });
+    var ss = this.state.dateStates;
+    // const res = this.state.dateStates.find(d => contains(d.get('range'), date));
+    var res = false;
+    for (var i = 0; i < ss.length; i++) {
+      var d = ss[i];
+      if (contains(d.range, date)) {
+        res = d;
+        break;
+      }
+    }
     if (!res) {
       var _props2 = this.props,
           defaultState = _props2.defaultState,
@@ -256,16 +269,16 @@ var DateRangePicker = _react2.default.createClass({
       var defs = _immutable2.default.fromJS(stateDefinitions);
       var def = defs.get(defaultState);
 
-      var tmp = _immutable2.default.fromJS([_immutable2.default.Map({
+      var tmp = [{
         range: s.range,
         state: defaultState,
-        selectable: def.get('selectable', true),
-        color: def.get('color'),
-        className: def.get('className')
-      })]);
+        selectable: def.selectable,
+        color: def.color,
+        className: def.className
+      }];
       return tmp;
     }
-    return _immutable2.default.fromJS([res]);
+    return [res];
   },
   sanitizeRange: function sanitizeRange(range, forwards) {
     /* Truncates the provided range at the first intersection
@@ -379,9 +392,9 @@ var DateRangePicker = _react2.default.createClass({
   },
   statesForDate: function statesForDate(date) {
     return this.state.dateStates.filter(function (d) {
-      return date.within(d.get('range'));
+      return date.within(d.range);
     }).map(function (d) {
-      return d.get('state');
+      return d.state;
     });
   },
   statesForRange: function statesForRange(range) {
@@ -389,9 +402,9 @@ var DateRangePicker = _react2.default.createClass({
       return this.statesForDate(range.start);
     }
     return this.state.dateStates.filter(function (d) {
-      return d.get('range').intersect(range);
+      return d.range.intersect(range);
     }).map(function (d) {
-      return d.get('state');
+      return d.state;
     });
   },
   completeSelection: function completeSelection() {
