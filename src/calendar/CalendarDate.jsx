@@ -164,7 +164,6 @@ const CalendarDate = React.createClass({
   render() {
     let {
       date,
-      dateRangesForDate,
       isSelectedDate,
       isSelectedRangeStart,
       isSelectedRangeEnd,

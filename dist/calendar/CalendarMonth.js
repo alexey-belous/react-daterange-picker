@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -111,21 +109,29 @@ var CalendarMonth = _react2.default.createClass({
 
     var states = dateRangesForDate(date);
 
-    return _react2.default.createElement(CalendarDate, _extends({
+    return _react2.default.createElement(CalendarDate, {
       key: i,
       isToday: d.isSame((0, _moment2.default)(), 'day'),
       isDisabled: !enabledRange.contains(d),
+
       isHighlightedDate: !!(highlightedDate && highlightedDate.isSame(d, 'day')),
       isHighlightedRangeStart: !!(highlightedRange && highlightedRange.start.isSame(d, 'day')),
       isHighlightedRangeEnd: !!(highlightedRange && highlightedRange.end.isSame(d, 'day')),
       isInHighlightedRange: !!(highlightedRange && highlightedRange.contains(d)),
+
       isSelectedDate: isSelectedDate,
       isSelectedRangeStart: isSelectedRangeStart,
       isSelectedRangeEnd: isSelectedRangeEnd,
       isInSelectedRange: isInSelectedRange,
+
       date: d,
-      states: states
-    }, props));
+      states: states,
+      firstOfMonth: props.firstOfMonth,
+
+      dateStates: props.dateStates,
+      onHighlightDate: props.onHighlightDate,
+      onUnHighlightDate: props.onUnHighlightDate,
+      onSelectDate: props.onSelectDate });
   },
   renderWeek: function renderWeek(dates, i) {
     var days = dates.map(this.renderDay);

@@ -71,17 +71,25 @@ const CalendarMonth = React.createClass({
         key={i}
         isToday={d.isSame(moment(), 'day')}
         isDisabled={!enabledRange.contains(d)}
+
         isHighlightedDate={!!(highlightedDate && highlightedDate.isSame(d, 'day'))}
         isHighlightedRangeStart={!!(highlightedRange && highlightedRange.start.isSame(d, 'day'))}
         isHighlightedRangeEnd={!!(highlightedRange && highlightedRange.end.isSame(d, 'day'))}
         isInHighlightedRange={!!(highlightedRange && highlightedRange.contains(d))}
+
         isSelectedDate={isSelectedDate}
         isSelectedRangeStart={isSelectedRangeStart}
         isSelectedRangeEnd={isSelectedRangeEnd}
         isInSelectedRange={isInSelectedRange}
+
         date={d}
         states={states}
-        {...props} />
+        firstOfMonth={props.firstOfMonth}
+
+        dateStates={props.dateStates}
+        onHighlightDate={props.onHighlightDate}
+        onUnHighlightDate={props.onUnHighlightDate}
+        onSelectDate={props.onSelectDate} />
     );
   },
 

@@ -251,12 +251,23 @@ var DateRangePicker = _react2.default.createClass({
   },
   dateRangesForDate: function dateRangesForDate(date) {
     var ss = this.state.dateStates;
-    // const res = this.state.dateStates.find(d => contains(d.get('range'), date));
     var res = false;
-    for (var i = 0; i < ss.length; i++) {
-      var d = ss[i];
-      if (contains(d.range, date)) {
-        res = d;
+    for (var i = 0; i < ss.length; i += 3) {
+      var d1 = ss[i];
+      if (contains(d1.range, date)) {
+        res = d1;
+        break;
+      }
+
+      var d2 = ss[i + 1];
+      if (d2 && contains(d2.range, date)) {
+        res = d2;
+        break;
+      }
+
+      var d3 = ss[i + 2];
+      if (d3 && contains(d3.range, date)) {
+        res = d3;
         break;
       }
     }
@@ -266,17 +277,16 @@ var DateRangePicker = _react2.default.createClass({
           stateDefinitions = _props2.stateDefinitions;
 
       var s = stateDefinitions[defaultState];
-      var defs = _immutable2.default.fromJS(stateDefinitions);
-      var def = defs.get(defaultState);
+      var defs = stateDefinitions;
+      var def = defs[defaultState];
 
-      var tmp = [{
+      return [{
         range: s.range,
         state: defaultState,
-        selectable: def.selectable,
+        selectable: true,
         color: def.color,
         className: def.className
       }];
-      return tmp;
     }
     return [res];
   },
